@@ -1,1 +1,2 @@
 discord>=2.3.2
+tzdata>=2023.4

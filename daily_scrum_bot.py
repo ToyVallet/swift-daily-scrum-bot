@@ -7,8 +7,9 @@ from zoneinfo import ZoneInfo
 
 server_id = 1195645316628742234
 daily_scrum_channel_id = 1195957938305642567
-daily_scrum_notice = "오전 11:00까지 업로드 해주세요 :grinning:"
-daily_scrum_template = """* 데일리 스크럼 양식
+daily_scrum_template = """오전 11:00까지 업로드 해주세요 :grinning:
+
+* 데일리 스크럼 양식
 ```
 1. 어제 한 일 :crescent_moon:
 -
@@ -18,6 +19,7 @@ daily_scrum_template = """* 데일리 스크럼 양식
 -
 ```
 """
+KST = ZoneInfo("Asia/Seoul")
 
 notification_schedule = {}
 
@@ -72,7 +74,6 @@ async def stop_daily_scrum(ctx: commands.Context):
 
 @tasks.loop(hours=12)
 async def write_daily_scrum_template():
-    KST = ZoneInfo("Asia/Seoul")
     current_datetime = datetime.now(tz=KST)
 
     target_time = time(8, 0, 0, tzinfo=KST)
@@ -102,7 +103,7 @@ async def write_daily_scrum_template():
 
     daily_scrum_channel = bot.get_channel(daily_scrum_channel_id)
     if daily_scrum_channel:
-        thread_name = target_datetime.strftime("%Y-%m-%d 데일리 스크럼")  # UTC 보정 +1일
+        thread_name = target_datetime.strftime("%Y-%m-%d 데일리 스크럼")
         thread = await daily_scrum_channel.create_thread(name=thread_name)
         thread_link = thread.jump_url
 

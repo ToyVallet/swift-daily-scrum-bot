@@ -3,6 +3,7 @@ from discord.ext import commands, tasks
 from discord import app_commands
 import asyncio, os
 from datetime import datetime, time, timedelta
+from zoneinfo import ZoneInfo
 
 server_id = 1195645316628742234
 daily_scrum_channel_id = 1195957938305642567
@@ -71,12 +72,15 @@ async def stop_daily_scrum(ctx: commands.Context):
 
 @tasks.loop(hours=12)
 async def write_daily_scrum_template():
-    current_datetime = datetime.now()
-    target_time = time(23, 0, 0)  # UTC 1월15일 23:00 = 한국시간 1월16일 오전 08:00
+    KST = ZoneInfo("Asia/Seoul")
+    current_datetime = datetime.now(tz=KST)
+
+    target_time = time(8, 0, 0, tzinfo=KST)
+
     if target_time < current_datetime.time() <= time(23, 59, 59):
-        target_datetime = datetime.combine(current_datetime.date() + timedelta(days=1), target_time)
+        target_datetime = datetime.combine(current_datetime.date() + timedelta(days=1), target_time, tzinfo=KST)
     else:
-        target_datetime = datetime.combine(current_datetime.date(), target_time)
+        target_datetime = datetime.combine(current_datetime.date(), target_time, tzinfo=KST)
 
     if notification_schedule.get(target_datetime) is None:
         notification_schedule[target_datetime] = True
@@ -85,19 +89,20 @@ async def write_daily_scrum_template():
         write_daily_scrum_template.restart()
         return
 
+    # print(f"current: {current_datetime}, target: {target_datetime}")
     time_interval = (target_datetime - current_datetime).total_seconds()
     if time_interval < 0:
         # print("알림 날짜가 과거입니다")
         write_daily_scrum_template.restart()
         return
 
-    # print(f"다음 알림 시각: (UTC) {target_datetime}")
+    # print(f"다음 알림 시각: {target_datetime}")
     # print(f"{time_interval}초 뒤 알림 예정입니다")
     await asyncio.sleep(time_interval)
 
     daily_scrum_channel = bot.get_channel(daily_scrum_channel_id)
     if daily_scrum_channel:
-        thread_name = (target_datetime + timedelta(days=1)).strftime("%Y-%m-%d 데일리 스크럼")  # UTC 보정 +1일
+        thread_name = target_datetime.strftime("%Y-%m-%d 데일리 스크럼")  # UTC 보정 +1일
         thread = await daily_scrum_channel.create_thread(name=thread_name)
         thread_link = thread.jump_url
 

@@ -12,11 +12,11 @@ daily_scrum_template = """오전 11:00까지 업로드 해주세요 :grinning:
 * 데일리 스크럼 양식
 ```
 1. 어제 한 일 :crescent_moon:
--
+ -
 2. 오늘 할 일 :fire:
--
+ -
 3. 공유할 이슈 :raised_hands:
--
+ -
 ```
 """
 KST = ZoneInfo("Asia/Seoul")

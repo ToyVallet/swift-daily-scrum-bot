@@ -1,0 +1,22 @@
+# fly.toml app configuration file generated for discord-daily-scrum-bot on 2024-01-17T12:06:45+09:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "discord-daily-scrum-bot"
+kill_signal = "SIGINT"
+kill_timeout = 5
+processes = []
+
+[env]
+
+[[services]]
+  internal_port = 8080
+  protocol = "tcp"
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[services.ports]]
+handlers = ["http"]
+port = "80"

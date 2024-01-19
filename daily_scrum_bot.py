@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 
 server_id = 1195645316628742234
 daily_scrum_channel_id = 1195957938305642567
-daily_scrum_template = """오전 11:00까지 업로드 해주세요 :grinning:
+daily_scrum_template = """해가 밝았어요 :grinning:
 
 * 데일리 스크럼 양식
 ```
@@ -104,7 +104,10 @@ async def write_daily_scrum_template():
     daily_scrum_channel = bot.get_channel(daily_scrum_channel_id)
     if daily_scrum_channel:
         thread_name = target_datetime.strftime("%Y-%m-%d 데일리 스크럼")
-        thread = await daily_scrum_channel.create_thread(name=thread_name)
+        thread = await daily_scrum_channel.create_thread(
+            name=thread_name,
+            type=discord.ChannelType.public_thread
+        )
         thread_link = thread.jump_url
 
         await daily_scrum_channel.send(content=f"오늘 하루도 화이팅입니다! {thread_link}")

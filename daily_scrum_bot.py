@@ -11,12 +11,12 @@ daily_scrum_template = """해가 밝았어요 :grinning:
 
 * 데일리 스크럼 양식
 ```
-1. 어제 한 일 :crescent_moon:
- -
-2. 오늘 할 일 :fire:
- -
-3. 공유할 이슈 :raised_hands:
- -
+### 어제 한 일 :crescent_moon:
+-
+### 오늘 할 일 :fire:
+-
+### 공유할 이슈 :raised_hands:
+-
 ```
 """
 KST = ZoneInfo("Asia/Seoul")
@@ -82,15 +82,15 @@ async def write_daily_scrum_template():
         target_datetime = datetime.combine(current_datetime.date() + timedelta(days=1), target_time, tzinfo=KST)
     else:
         target_datetime = datetime.combine(current_datetime.date(), target_time, tzinfo=KST)
+    # print(f"current: {current_datetime}, target: {target_datetime}")
 
-    if notification_schedule.get(target_datetime) is None:
-        notification_schedule[target_datetime] = True
-    else:
-        # print(f"{target_datetime}에 이미 알림이 예약되어 있습니다")
+    if notification_schedule.get(target_datetime) is not None:
+        # print(f"{target_datetime}에 이미 알림이 예약 되어 있습니다")
+        await asyncio.sleep(30)
         write_daily_scrum_template.restart()
         return
 
-    # print(f"current: {current_datetime}, target: {target_datetime}")
+    notification_schedule[target_datetime] = True
     time_interval = (target_datetime - current_datetime).total_seconds()
     if time_interval < 0:
         # print("알림 날짜가 과거입니다")

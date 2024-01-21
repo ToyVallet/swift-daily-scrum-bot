@@ -8,10 +8,5 @@ def keep_alive():
     t.start()
 
 
-def run_bot():
-    t = Thread(target=daily_scrum_bot.main)
-    t.start()
-
-
-run_bot()
 keep_alive()
+daily_scrum_bot.main()

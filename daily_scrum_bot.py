@@ -25,6 +25,7 @@ notification_schedule = {}
 
 
 class DailyScrumBot(commands.Bot):
+
     def __init__(self):
         intents = discord.Intents.default()
         intents.message_content = True
@@ -53,7 +54,9 @@ async def hi(ctx: commands.Context):
     await ctx.reply("안녕하세요. Swifty팀의 데일리 스크럼 봇이에요 :robot:", ephemeral=True)
 
 
-@bot.hybrid_command(name="알림시작", with_app_command=True, description="데일리 스크럼 알림 시작")
+@bot.hybrid_command(name="알림시작",
+                    with_app_command=True,
+                    description="데일리 스크럼 알림 시작")
 @app_commands.guilds(discord.Object(id=server_id))
 async def start_daily_scrum(ctx: commands.Context):
     if write_daily_scrum_template.is_running() == True:
@@ -64,7 +67,9 @@ async def start_daily_scrum(ctx: commands.Context):
     write_daily_scrum_template.start()
 
 
-@bot.hybrid_command(name="알림종료", with_app_command=True, description="데일리 스크럼 알림 종료")
+@bot.hybrid_command(name="알림종료",
+                    with_app_command=True,
+                    description="데일리 스크럼 알림 종료")
 @app_commands.guilds(discord.Object(id=server_id))
 async def stop_daily_scrum(ctx: commands.Context):
     await ctx.reply("데일리 스크럼 알림을 종료합니다", ephemeral=True)
@@ -79,9 +84,14 @@ async def write_daily_scrum_template():
     target_time = time(8, 0, 0, tzinfo=KST)
 
     if target_time < current_datetime.time() <= time(23, 59, 59):
-        target_datetime = datetime.combine(current_datetime.date() + timedelta(days=1), target_time, tzinfo=KST)
+        target_datetime = datetime.combine(current_datetime.date() +
+                                           timedelta(days=1),
+                                           target_time,
+                                           tzinfo=KST)
     else:
-        target_datetime = datetime.combine(current_datetime.date(), target_time, tzinfo=KST)
+        target_datetime = datetime.combine(current_datetime.date(),
+                                           target_time,
+                                           tzinfo=KST)
     # print(f"current: {current_datetime}, target: {target_datetime}")
 
     if notification_schedule.get(target_datetime) is not None:
@@ -105,9 +115,7 @@ async def write_daily_scrum_template():
     if daily_scrum_channel:
         thread_name = target_datetime.strftime("%Y-%m-%d 데일리 스크럼")
         thread = await daily_scrum_channel.create_thread(
-            name=thread_name,
-            type=discord.ChannelType.public_thread
-        )
+            name=thread_name, type=discord.ChannelType.public_thread)
         thread_link = thread.jump_url
 
         await daily_scrum_channel.send(content=f"오늘 하루도 화이팅입니다! {thread_link}")
@@ -115,7 +123,7 @@ async def write_daily_scrum_template():
 
 
 def main():
-    bot.run(os.getenv('DISCORD_TOKEN'))
+    bot.run(os.environ['DISCORD_TOKEN'])
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 <h1 align="center"> Swifty 데일리 스크럼 봇 </h1>
 
 # 📖 Introduction
-오전 8시마다 데일리 스크럼 양식을 업로드해주는 봇입니다.
+오전 8시마다 데일리 스크럼 양식을 업로드해주는 디스코드 봇입니다.
 
 # 🤖 Features & Commands
 * 봇에게 인사하기

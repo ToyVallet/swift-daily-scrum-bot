@@ -18,5 +18,4 @@
 
 # 🌍 Development Environments
 
-- Deploy: [Replit](https://replit.com/)
-- Monitoring: [UptimeRobot](https://uptimerobot.com/)
+- Deploy: Private Server(Ubuntu)
